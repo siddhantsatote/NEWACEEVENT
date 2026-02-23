@@ -1,0 +1,1711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="Ace Event Management — Leading corporate event management company in Nashik, India. Corporate events, exhibitions, government events, brand activation."/>
+<meta name="keywords" content="event management nashik, corporate events nashik, exhibition management india, ace event management"/>
+<meta name="author" content="Ace Event Management"/>
+<meta property="og:title" content="ACE Event Management — Curated Excellence"/>
+<meta property="og:description" content="Your partner in creating unforgettable events. 500+ events executed across India."/>
+<meta property="og:type" content="website"/>
+<title>ACE Event Management — Curated Excellence | Nashik</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=Jost:wght@200;300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+/* ═══════════════════════════════════════
+   ROOT & RESET
+═══════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --gold:#C9A84C;
+  --gold-light:#E8C97A;
+  --gold-dark:#8A6820;
+  --gold-faint:rgba(201,168,76,0.08);
+  --black:#080808;
+  --black2:#0f0f0f;
+  --black3:#161616;
+  --black4:#1c1c1c;
+  --white:#F0EBE0;
+  --gray:#6B6660;
+  --gray2:#888880;
+}
+html{overflow-x:hidden;scroll-behavior:smooth;}
+body{
+  background:var(--black);
+  color:var(--white);
+  font-family:'Jost',sans-serif;
+  font-weight:300;
+  overflow-x:hidden;
+  cursor:none;
+}
+@media(pointer:coarse){body{cursor:auto;}}
+::selection{background:var(--gold);color:var(--black);}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:var(--black);}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:2px;}
+img{max-width:100%;display:block;}
+a{text-decoration:none;color:inherit;}
+
+/* ═══════════════════════════════════════
+   NOISE OVERLAY
+═══════════════════════════════════════ */
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:9990;
+  opacity:0.35;
+  animation:noiseShift 0.4s steps(2) infinite;
+}
+@keyframes noiseShift{
+  0%{transform:translate(0,0);}
+  25%{transform:translate(-2px,1px);}
+  50%{transform:translate(1px,-2px);}
+  75%{transform:translate(-1px,-1px);}
+  100%{transform:translate(2px,1px);}
+}
+
+/* ═══════════════════════════════════════
+   LOADER
+═══════════════════════════════════════ */
+#loader{
+  position:fixed;inset:0;z-index:9999;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--black);
+  overflow:hidden;
+}
+#loader-panel-l,#loader-panel-r{
+  position:absolute;top:0;bottom:0;
+  width:51%;background:var(--black);z-index:4;
+}
+#loader-panel-l{left:0;}
+#loader-panel-r{right:0;}
+#loader-center{
+  position:relative;z-index:5;
+  display:flex;flex-direction:column;
+  align-items:center;gap:16px;
+}
+#loader-logo{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(56px,10vw,110px);
+  font-weight:700;color:var(--gold);
+  letter-spacing:14px;text-transform:uppercase;
+  opacity:0;
+}
+#loader-tagline{
+  font-size:9px;letter-spacing:6px;color:var(--gray);
+  text-transform:uppercase;opacity:0;
+}
+#loader-bar{
+  width:200px;height:1px;
+  background:rgba(201,168,76,0.2);
+  position:relative;overflow:hidden;
+  opacity:0;
+}
+#loader-bar-fill{
+  position:absolute;left:0;top:0;bottom:0;
+  background:var(--gold);width:0%;
+}
+
+/* ═══════════════════════════════════════
+   CUSTOM CURSOR
+═══════════════════════════════════════ */
+#cur-dot{
+  position:fixed;width:7px;height:7px;
+  background:var(--gold);border-radius:50%;
+  pointer-events:none;z-index:9998;
+  transform:translate(-50%,-50%);
+  transition:width .3s,height .3s,background .3s;
+}
+#cur-ring{
+  position:fixed;width:34px;height:34px;
+  border:1px solid rgba(201,168,76,0.55);
+  border-radius:50%;pointer-events:none;z-index:9997;
+  transform:translate(-50%,-50%);
+}
+#cur-txt{
+  position:fixed;pointer-events:none;z-index:9996;
+  font-size:9px;letter-spacing:2px;color:var(--gold);
+  background:rgba(8,8,8,0.85);padding:5px 10px;
+  opacity:0;white-space:nowrap;
+  transform:translate(18px,-50%);
+  transition:opacity .3s;
+  backdrop-filter:blur(8px);
+}
+body.link-hover #cur-dot{width:3px;height:3px;}
+body.link-hover #cur-ring{width:54px;height:54px;border-color:var(--gold);}
+body.card-hover #cur-txt{opacity:1;}
+
+/* ═══════════════════════════════════════
+   NAVBAR
+═══════════════════════════════════════ */
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:500;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:30px 64px;
+  transition:padding .5s ease,background .5s ease,border-color .5s ease;
+  border-bottom:1px solid transparent;
+}
+#nav.sticky{
+  padding:16px 64px;
+  background:rgba(8,8,8,0.96);
+  border-bottom-color:rgba(201,168,76,0.14);
+  backdrop-filter:blur(20px);
+}
+.n-logo{
+    display:flex;align-items:center;gap:10px;
+    font-family:'Cormorant Garamond',serif;
+    font-size:20px;font-weight:700;
+    color:var(--gold);letter-spacing:8px;
+    text-transform:uppercase;
+  }
+  .n-logo-img{
+    width:44px;height:44px;
+    object-fit:contain;
+    flex-shrink:0;
+    filter:drop-shadow(0 0 6px rgba(201,168,76,0.35));
+    transition:filter .3s;
+  }
+  .n-logo:hover .n-logo-img{filter:drop-shadow(0 0 12px rgba(201,168,76,0.65));}
+  .n-gem{display:none;}
+.n-links{display:flex;gap:44px;list-style:none;}
+.n-links a{
+  font-size:10px;letter-spacing:3.5px;
+  text-transform:uppercase;color:rgba(240,235,224,0.55);
+  transition:color .3s;position:relative;
+}
+.n-links a::after{
+  content:'';position:absolute;
+  bottom:-4px;left:0;right:0;height:1px;
+  background:var(--gold);
+  transform:scaleX(0);transform-origin:right;
+  transition:transform .4s ease;
+}
+.n-links a:hover{color:var(--gold);}
+.n-links a:hover::after{transform:scaleX(1);transform-origin:left;}
+.n-book{
+  border:1px solid var(--gold);color:var(--gold);
+  padding:11px 30px;font-size:9px;letter-spacing:3px;
+  text-transform:uppercase;position:relative;overflow:hidden;
+  transition:color .4s;
+}
+.n-book::before{
+  content:'';position:absolute;inset:0;
+  background:var(--gold);
+  transform:translateY(102%);
+  transition:transform .42s cubic-bezier(.77,0,.175,1);
+}
+.n-book span{position:relative;z-index:1;}
+.n-book:hover{color:var(--black);}
+.n-book:hover::before{transform:translateY(0);}
+/* Hamburger (mobile) */
+#hamburger{
+  display:none;flex-direction:column;
+  gap:5px;cursor:none;background:none;border:none;
+  padding:4px;
+}
+#hamburger span{
+  width:24px;height:1px;background:var(--gold);
+  transition:all .4s;display:block;
+}
+#nav.menu-open #hamburger span:nth-child(1){transform:translateY(6px) rotate(45deg);}
+#nav.menu-open #hamburger span:nth-child(2){opacity:0;}
+#nav.menu-open #hamburger span:nth-child(3){transform:translateY(-6px) rotate(-45deg);}
+/* Mobile full-screen menu */
+#mobile-menu{
+  position:fixed;inset:0;z-index:490;
+  background:rgba(8,8,8,0.98);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:40px;
+  opacity:0;pointer-events:none;
+  transition:opacity .4s;
+  backdrop-filter:blur(20px);
+}
+#mobile-menu.open{opacity:1;pointer-events:all;}
+#mobile-menu a{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(36px,8vw,52px);font-weight:600;
+  color:rgba(240,235,224,0.7);letter-spacing:4px;
+  transition:color .3s;
+}
+#mobile-menu a:hover{color:var(--gold);}
+
+/* ═══════════════════════════════════════
+   HERO
+═══════════════════════════════════════ */
+#hero{
+  min-height:100vh;
+  position:relative;
+  display:flex;align-items:center;
+  overflow:hidden;
+}
+.hero-img-side{
+    position:absolute;right:0;top:0;
+    width:55%;height:100%;
+    opacity:0;
+    transition:opacity 1s ease 3s;
+    overflow:hidden;
+  }
+  .hero-img-side.shown{opacity:1;}
+  .hero-img-side img{
+    width:100%;height:100%;
+    object-fit:cover;object-position:center;
+    display:block;
+  }
+  .hero-img-side::before{
+    content:'';
+    position:absolute;inset:0;
+    background:linear-gradient(90deg,var(--black) 0%,rgba(8,8,8,0.45) 40%,transparent 100%);
+    z-index:1;
+  }
+
+.hero-scroll-hint{
+  position:absolute;bottom:100px;left:64px;
+  display:flex;align-items:center;gap:14px;
+  font-size:8px;letter-spacing:4px;text-transform:uppercase;
+  color:var(--gray);opacity:0;
+  animation:fadeInDelay 1s 4s forwards;
+}
+@keyframes fadeInDelay{to{opacity:1;}}
+.hero-scroll-line{
+  width:40px;height:1px;background:var(--gray);
+  position:relative;overflow:hidden;
+}
+.hero-scroll-line::after{
+  content:'';position:absolute;
+  left:-100%;top:0;bottom:0;width:100%;
+  background:var(--gold);
+  animation:scanLine 2s 4s ease infinite;
+}
+@keyframes scanLine{
+  0%{left:-100%;}100%{left:100%;}
+}
+.hero-wrap{
+  position:relative;z-index:5;
+  padding:130px 64px 140px;
+  max-width:720px;
+}
+.h-badge{
+  display:inline-flex;align-items:center;gap:14px;
+  font-size:9px;letter-spacing:5px;color:var(--gold);
+  text-transform:uppercase;margin-bottom:38px;
+  opacity:0;transform:translateY(18px);
+}
+.h-badge-bar{width:30px;height:1px;background:var(--gold);}
+.h-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(54px,7.8vw,104px);
+  font-weight:600;line-height:1.0;
+  margin-bottom:16px;
+}
+.h-word{
+  display:inline-block;
+  opacity:0;transform:translateY(110%);
+  margin-right:0.18em;
+}
+.h-word.italic-gold{
+  color:var(--gold);font-style:italic;
+}
+.h-sub{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(17px,2.2vw,24px);font-style:italic;
+  color:rgba(201,168,76,0.65);margin-bottom:28px;
+  opacity:0;
+}
+.h-desc{
+  font-size:14px;line-height:1.95;
+  color:rgba(240,235,224,0.42);
+  max-width:430px;margin-bottom:52px;opacity:0;
+}
+.h-ctas{display:flex;gap:18px;flex-wrap:wrap;opacity:0;}
+/* Buttons */
+.btn-fill{
+  background:var(--gold);color:var(--black);
+  border:none;padding:18px 46px;
+  font-family:'Jost',sans-serif;font-size:10px;
+  letter-spacing:3px;text-transform:uppercase;font-weight:600;
+  position:relative;overflow:hidden;cursor:none;
+  display:inline-block;transition:box-shadow .4s;
+}
+.btn-fill::after{
+  content:'';position:absolute;
+  top:-50%;left:-110%;
+  width:200%;height:200%;
+  background:rgba(255,255,255,0.18);
+  transform:rotate(32deg);
+  transition:left .5s ease;
+}
+.btn-fill:hover::after{left:110%;}
+.btn-fill:hover{box-shadow:0 12px 44px rgba(201,168,76,0.38);}
+.btn-border{
+  border:1px solid rgba(240,235,224,0.2);
+  color:var(--white);padding:18px 46px;
+  font-family:'Jost',sans-serif;font-size:10px;
+  letter-spacing:3px;text-transform:uppercase;
+  position:relative;overflow:hidden;cursor:none;
+  display:inline-block;
+}
+.btn-border::before{
+  content:'';position:absolute;inset:0;
+  background:var(--gold);
+  transform:translateX(-102%);
+  transition:transform .42s cubic-bezier(.77,0,.175,1);
+}
+.btn-border .bbs{position:relative;z-index:1;transition:color .4s;}
+.btn-border:hover::before{transform:translateX(0);}
+.btn-border:hover .bbs{color:var(--black);}
+/* Hero ticker */
+.h-ticker{
+  position:absolute;bottom:0;left:0;right:0;
+  border-top:1px solid rgba(201,168,76,0.13);
+  overflow:hidden;padding:14px 0;
+  background:rgba(8,8,8,0.45);
+}
+.ticker-wrap{
+  display:flex;white-space:nowrap;
+  animation:tickerMove 22s linear infinite;
+}
+.t-item{
+  flex-shrink:0;padding:0 36px;
+  font-size:10px;letter-spacing:4px;
+  color:var(--gold);text-transform:uppercase;
+  display:inline-flex;align-items:center;gap:18px;
+}
+.t-dot{width:4px;height:4px;border-radius:50%;background:var(--gold-dark);}
+@keyframes tickerMove{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* ═══════════════════════════════════════
+   STATS
+═══════════════════════════════════════ */
+#stats{
+  background:var(--black2);
+  position:relative;overflow:hidden;
+}
+#stats::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    repeating-linear-gradient(0deg,transparent,transparent 79px,rgba(201,168,76,0.035) 80px),
+    repeating-linear-gradient(90deg,transparent,transparent 79px,rgba(201,168,76,0.035) 80px);
+}
+.stats-inner{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:2px;
+}
+.stat-box{
+  background:var(--black3);
+  padding:70px 40px;text-align:center;
+  position:relative;overflow:hidden;
+  border:1px solid rgba(201,168,76,0.05);
+  transition:background .4s;
+}
+.stat-box:hover{background:var(--black4);}
+.stat-box::after{
+  content:'';position:absolute;
+  bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  transform:translateX(-100%);
+  transition:transform .6s ease;
+}
+.stat-box:hover::after{transform:translateX(0);}
+.stat-n{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(64px,7vw,96px);
+  font-weight:700;color:var(--gold);
+  line-height:1;display:flex;
+  align-items:flex-start;justify-content:center;
+}
+.stat-sfx{font-size:45%;margin-top:8px;}
+.stat-l{
+  font-size:9px;letter-spacing:4px;
+  text-transform:uppercase;color:var(--gray);
+  margin-top:14px;
+}
+
+/* ═══════════════════════════════════════
+   SECTION HELPERS
+═══════════════════════════════════════ */
+.stag{
+  display:inline-flex;align-items:center;gap:14px;
+  font-size:9px;letter-spacing:5px;
+  text-transform:uppercase;color:var(--gold);
+  margin-bottom:18px;
+}
+.stag::before{content:'';width:28px;height:1px;background:var(--gold);}
+.stitle{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(38px,5.5vw,68px);
+  font-weight:600;line-height:1.05;
+}
+.stitle em{font-style:italic;color:var(--gold);}
+.sdesc{
+  font-size:14px;line-height:1.9;
+  color:rgba(240,235,224,0.4);
+}
+
+/* ═══════════════════════════════════════
+   SERVICES
+═══════════════════════════════════════ */
+#services{padding:120px 64px;background:var(--black);}
+.svc-head{
+  display:flex;justify-content:space-between;
+  align-items:flex-end;margin-bottom:72px;
+  flex-wrap:wrap;gap:32px;
+}
+.svc-head-r{max-width:380px;}
+.svc-grid{
+  display:grid;
+  grid-template-columns:1.45fr 1fr 1fr;
+  grid-template-rows:auto auto;
+  gap:2px;
+}
+.svc-card{
+  background:var(--black3);padding:52px 44px;
+  position:relative;overflow:hidden;
+  border:1px solid rgba(201,168,76,0.05);
+  transition:background .4s,transform .3s;
+}
+.svc-card:hover{background:#1b1914;transform:translateY(-3px);}
+.svc-span2{grid-row:span 2;}
+.svc-ghost-num{
+  position:absolute;top:18px;right:22px;
+  font-family:'Cormorant Garamond',serif;
+  font-size:80px;font-weight:700;
+  color:rgba(201,168,76,0.04);line-height:1;
+  transition:color .4s;
+}
+.svc-card:hover .svc-ghost-num{color:rgba(201,168,76,0.09);}
+.svc-ico{
+  width:54px;height:54px;
+  border:1px solid rgba(201,168,76,0.25);
+  display:flex;align-items:center;justify-content:center;
+  font-size:21px;color:var(--gold);
+  margin-bottom:28px;transition:all .4s;
+  flex-shrink:0;
+}
+.svc-card:hover .svc-ico{background:var(--gold);color:var(--black);border-color:var(--gold);}
+.svc-card h3{
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px;font-weight:600;
+  margin-bottom:14px;transition:color .4s;
+  position:relative;z-index:1;
+}
+.svc-card:hover h3{color:var(--gold);}
+.svc-card p{
+  font-size:13px;line-height:1.88;
+  color:rgba(240,235,224,0.4);
+  position:relative;z-index:1;
+}
+.svc-line{
+  position:absolute;bottom:0;left:0;right:0;
+  height:2px;background:var(--gold);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .5s ease;
+}
+.svc-card:hover .svc-line{transform:scaleX(1);}
+.svc-glow{
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(201,168,76,0.055),transparent 60%);
+  opacity:0;transition:opacity .4s;
+}
+.svc-card:hover .svc-glow{opacity:1;}
+
+/* ═══════════════════════════════════════
+   WHY CHOOSE US
+═══════════════════════════════════════ */
+#why{
+  background:var(--black2);
+  padding:0 64px;
+  position:relative;
+}
+.why-wrap{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  min-height:100vh;
+}
+.why-pin{
+  position:sticky;top:0;
+  height:100vh;display:flex;
+  flex-direction:column;justify-content:center;
+  padding-right:60px;
+}
+.why-scroll{padding:100px 0 100px 60px;}
+.why-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:12px;letter-spacing:4px;
+  color:var(--gold);margin-bottom:14px;
+}
+.why-row{
+  padding:48px 0;
+  border-bottom:1px solid rgba(201,168,76,0.09);
+}
+.why-row:first-child{padding-top:0;}
+.why-row h3{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(24px,3vw,34px);
+  font-weight:600;color:var(--white);
+  margin-bottom:12px;line-height:1.2;
+}
+.why-row p{font-size:13px;line-height:1.9;color:var(--gray);}
+.why-pin-stats{margin-top:50px;display:flex;gap:28px;align-items:center;}
+.wps-val{
+  font-family:'Cormorant Garamond',serif;
+  font-size:54px;font-weight:700;color:var(--gold);line-height:1;
+}
+.wps-val span{font-size:28px;}
+.wps-lbl{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--gray);margin-top:6px;}
+.wps-div{width:1px;align-self:stretch;background:rgba(201,168,76,0.18);}
+
+/* ═══════════════════════════════════════
+   PARTNERS MARQUEE
+═══════════════════════════════════════ */
+#partners{
+  padding:70px 0;background:var(--black);
+  border-top:1px solid rgba(201,168,76,0.1);
+  border-bottom:1px solid rgba(201,168,76,0.1);
+  overflow:hidden;
+}
+.mq-title{
+  text-align:center;font-size:9px;
+  letter-spacing:5px;text-transform:uppercase;
+  color:var(--gray);margin-bottom:36px;
+}
+.mq-row{overflow:hidden;margin-bottom:14px;}
+.mq-row:last-child{margin-bottom:0;}
+.mq-track{display:flex;white-space:nowrap;flex-shrink:0;}
+.mq-row:nth-child(2) .mq-track{animation:mqLeft 20s linear infinite;}
+.mq-row:nth-child(3) .mq-track{animation:mqRight 20s linear infinite;}
+@keyframes mqLeft{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+@keyframes mqRight{0%{transform:translateX(-50%);}100%{transform:translateX(0);}}
+.mq-item{
+  font-family:'Cormorant Garamond',serif;
+  font-size:19px;letter-spacing:4px;font-weight:600;
+  text-transform:uppercase;padding:0 44px;
+  color:rgba(240,235,224,0.14);
+  transition:color .3s;flex-shrink:0;cursor:none;
+}
+.mq-item:hover{color:var(--gold);}
+.mq-sep{color:var(--gold-dark);opacity:0.35;align-self:center;font-size:11px;flex-shrink:0;}
+
+/* ═══════════════════════════════════════
+   PORTFOLIO
+═══════════════════════════════════════ */
+#portfolio{padding:120px 64px;background:var(--black2);}
+.port-head{
+  display:flex;justify-content:space-between;
+  align-items:flex-end;margin-bottom:72px;
+  flex-wrap:wrap;gap:28px;
+}
+.port-title-rel{display:inline-block;}
+.port-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:2px;
+}
+.p-card{
+  position:relative;overflow:hidden;
+  aspect-ratio:4/3;cursor:none;
+  background:var(--black3);
+}
+.p-bg{
+  position:absolute;inset:0;
+  transition:transform .75s cubic-bezier(.25,.46,.45,.94);
+}
+.p-card:hover .p-bg{transform:scale(1.07);}
+.p-scan{
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    0deg,transparent,transparent 2px,
+    rgba(0,0,0,0.07) 2px,rgba(0,0,0,0.07) 4px
+  );
+  opacity:0;transition:opacity .4s;pointer-events:none;
+}
+.p-card:hover .p-scan{opacity:1;}
+.p-hatch{
+  position:absolute;inset:0;
+  background-image:repeating-linear-gradient(
+    45deg,transparent,transparent 12px,
+    rgba(201,168,76,0.025) 12px,rgba(201,168,76,0.025) 13px
+  );
+  opacity:0;transition:opacity .4s;
+}
+.p-card:hover .p-hatch{opacity:1;}
+.p-cover{
+  position:absolute;inset:0;
+  background:linear-gradient(0deg,rgba(8,8,8,0.96) 0%,rgba(8,8,8,0.25) 55%,transparent 100%);
+  display:flex;flex-direction:column;
+  justify-content:flex-end;padding:28px 26px;
+}
+.p-cat{
+  font-size:9px;letter-spacing:3px;color:var(--gold);
+  text-transform:uppercase;
+  opacity:0;transform:translateY(8px);
+  transition:all .4s .05s;margin-bottom:6px;
+}
+.p-card:hover .p-cat{opacity:1;transform:translateY(0);}
+.p-bar{
+  width:0;height:1px;background:var(--gold);
+  margin-bottom:10px;transition:width .45s ease;
+}
+.p-card:hover .p-bar{width:34px;}
+.p-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:20px;font-weight:600;
+  transform:translateY(5px);transition:all .4s;
+  margin-bottom:7px;
+}
+.p-card:hover .p-name{color:var(--gold);transform:translateY(0);}
+.p-text{
+  font-size:11px;color:rgba(240,235,224,0.42);
+  line-height:1.65;max-height:0;overflow:hidden;
+  opacity:0;transition:max-height .45s ease,opacity .4s;
+}
+.p-card:hover .p-text{max-height:70px;opacity:1;}
+.p-idx{
+  position:absolute;top:18px;right:18px;
+  font-family:'Cormorant Garamond',serif;
+  font-size:11px;letter-spacing:2px;
+  color:var(--gold);opacity:0.3;
+}
+
+/* ═══════════════════════════════════════
+   APPOINTMENT
+═══════════════════════════════════════ */
+#appointment{padding:120px 64px;background:var(--black);}
+.appt-rule{
+  width:100%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  margin-bottom:84px;
+  transform:scaleX(0);
+  transform-origin:left;
+}
+.appt-cols{
+  display:grid;
+  grid-template-columns:1fr 1.35fr;
+  gap:96px;align-items:start;
+}
+.appt-big{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(46px,5vw,74px);
+  font-weight:300;font-style:italic;
+  line-height:1.08;margin-bottom:44px;
+}
+.appt-big b{
+  font-style:normal;font-weight:700;
+  display:block;color:var(--gold);
+}
+.c-row{
+  display:flex;gap:16px;align-items:flex-start;
+  margin-bottom:22px;padding-bottom:22px;
+  border-bottom:1px solid rgba(201,168,76,0.07);
+}
+.c-ico{
+  width:40px;height:40px;flex-shrink:0;
+  border:1px solid rgba(201,168,76,0.22);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--gold);font-size:15px;
+  transition:all .3s;
+}
+.c-row:hover .c-ico{background:var(--gold);color:var(--black);}
+.c-lbl{font-size:8px;letter-spacing:3.5px;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+.c-val{font-size:13px;color:rgba(240,235,224,0.55);line-height:1.55;}
+/* Luxury form */
+.l-form{display:grid;grid-template-columns:1fr 1fr;gap:0;}
+.fg{
+  padding:18px 0;
+  border-bottom:1px solid rgba(201,168,76,0.1);
+  position:relative;
+}
+.fg.wide{grid-column:1/-1;}
+.fg:nth-child(odd):not(.wide){border-right:1px solid rgba(201,168,76,0.07);padding-right:28px;}
+.fg:nth-child(even):not(.wide){padding-left:28px;}
+.fl{
+  font-size:8px;letter-spacing:4px;
+  text-transform:uppercase;color:var(--gold);
+  display:block;margin-bottom:9px;
+}
+.fg input,.fg select,.fg textarea{
+  width:100%;background:transparent;
+  border:none;outline:none;
+  color:var(--white);font-family:'Jost',sans-serif;
+  font-size:14px;font-weight:300;padding:3px 0;
+}
+.fg select option{background:var(--black2);color:var(--white);}
+.fg textarea{resize:none;height:96px;}
+.fu{
+  position:absolute;bottom:-1px;left:0;right:0;
+  height:1px;background:var(--gold);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .4s ease;
+}
+.fg:focus-within .fu{transform:scaleX(1);}
+.fg:nth-child(odd):not(.wide):focus-within .fu{right:-1px;}
+.fsub{
+  grid-column:1/-1;margin-top:38px;
+  background:var(--gold);color:var(--black);
+  border:none;padding:20px;width:100%;
+  font-family:'Jost',sans-serif;font-size:10px;
+  letter-spacing:4px;text-transform:uppercase;
+  font-weight:600;cursor:none;
+  position:relative;overflow:hidden;
+  transition:box-shadow .4s;
+}
+.fsub::after{
+  content:'';position:absolute;
+  top:-50%;left:-110%;width:200%;height:200%;
+  background:rgba(255,255,255,0.18);transform:rotate(32deg);
+  transition:left .5s ease;
+}
+.fsub:hover::after{left:110%;}
+.fsub:hover{box-shadow:0 10px 40px rgba(201,168,76,0.35);}
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer{
+  background:#050505;
+  border-top:1px solid rgba(201,168,76,0.12);
+  position:relative;overflow:hidden;
+  padding:84px 64px 44px;
+}
+.ft-ghost{
+  position:absolute;bottom:-20px;left:0;right:0;
+  text-align:center;
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(72px,13vw,175px);
+  font-weight:700;color:transparent;
+  -webkit-text-stroke:1px rgba(201,168,76,0.055);
+  letter-spacing:16px;text-transform:uppercase;
+  white-space:nowrap;pointer-events:none;
+}
+.ft-progress{
+  position:absolute;top:0;left:0;
+  height:2px;background:var(--gold);width:0%;
+  z-index:10;transition:width .12s linear;
+}
+.ft-cols{
+  display:grid;
+  grid-template-columns:1.6fr 1fr 1fr 1fr;
+  gap:56px;margin-bottom:64px;
+  position:relative;
+}
+.ft-logo-big{
+  font-family:'Cormorant Garamond',serif;
+  font-size:26px;font-weight:700;
+  color:var(--gold);letter-spacing:8px;
+  display:block;margin-bottom:5px;
+}
+.ft-logo-sm{
+  font-size:8px;letter-spacing:4px;
+  color:var(--gray);display:block;margin-bottom:18px;
+}
+.ft-about{font-size:13px;line-height:1.88;color:var(--gray);}
+.ft-h{
+  font-family:'Cormorant Garamond',serif;
+  font-size:15px;font-weight:600;
+  color:var(--white);letter-spacing:2px;
+  margin-bottom:22px;padding-bottom:12px;
+  border-bottom:1px solid rgba(201,168,76,0.14);
+}
+.ft-list{list-style:none;display:flex;flex-direction:column;gap:11px;}
+.ft-list a{
+  font-size:12px;color:var(--gray);
+  transition:all .3s;display:inline-flex;
+  align-items:center;gap:0;
+}
+.ft-list a::before{
+  content:'';width:0;height:1px;
+  background:var(--gold);margin-right:0;
+  transition:width .3s,margin-right .3s;
+}
+.ft-list a:hover{color:var(--gold);}
+.ft-list a:hover::before{width:14px;margin-right:8px;}
+.ft-cr{
+  display:flex;gap:12px;margin-bottom:13px;
+  align-items:flex-start;
+}
+.ft-cr span:first-child{color:var(--gold);font-size:13px;margin-top:1px;}
+.ft-cr span:last-child{font-size:12px;color:var(--gray);line-height:1.6;}
+.ft-bottom{
+  display:flex;justify-content:space-between;
+  align-items:center;padding-top:28px;
+  border-top:1px solid rgba(255,255,255,0.045);
+  flex-wrap:wrap;gap:14px;position:relative;
+}
+.ft-copy{font-size:10px;color:rgba(240,235,224,0.2);letter-spacing:1.5px;}
+.ft-policy{display:flex;gap:22px;}
+.ft-policy a{font-size:10px;color:rgba(240,235,224,0.2);letter-spacing:1px;transition:color .3s;}
+.ft-policy a:hover{color:var(--gold);}
+.btt{
+  font-size:9px;letter-spacing:3px;color:var(--gold);
+  text-transform:uppercase;background:none;border:none;
+  font-family:'Jost',sans-serif;cursor:none;
+  display:flex;align-items:center;gap:8px;
+  transition:gap .3s;
+}
+.btt::before{content:'↑';font-size:14px;}
+.btt:hover{gap:14px;}
+
+/* ═══════════════════════════════════════
+   WHATSAPP FLOAT
+═══════════════════════════════════════ */
+.wa{
+  position:fixed;bottom:36px;right:36px;
+  z-index:490;width:54px;height:54px;
+  background:var(--gold);
+  display:flex;align-items:center;justify-content:center;
+  text-decoration:none;cursor:none;
+  transition:transform .3s,box-shadow .3s;
+  animation:wap 3s ease infinite;
+}
+.wa:hover{transform:scale(1.12);}
+@keyframes wap{
+  0%,100%{box-shadow:0 4px 18px rgba(201,168,76,0.4);}
+  50%{box-shadow:0 4px 44px rgba(201,168,76,0.72);}
+}
+
+/* ═══════════════════════════════════════
+   MODAL
+═══════════════════════════════════════ */
+#modal{
+  position:fixed;inset:0;z-index:800;
+  background:rgba(5,5,5,0.96);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity .4s;
+  backdrop-filter:blur(14px);
+}
+#modal.on{opacity:1;pointer-events:all;}
+.modal-box{
+  max-width:580px;width:90%;
+  border:1px solid rgba(201,168,76,0.18);
+  padding:56px;position:relative;
+  transform:translateY(36px);
+  transition:transform .5s cubic-bezier(.34,1.56,.64,1);
+  background:var(--black3);
+}
+#modal.on .modal-box{transform:translateY(0);}
+.modal-x{
+  position:absolute;top:18px;right:18px;
+  background:none;border:none;color:var(--gold);
+  font-size:18px;cursor:none;transition:transform .3s;
+}
+.modal-x:hover{transform:rotate(90deg);}
+.modal-bg-n{
+  font-family:'Cormorant Garamond',serif;
+  font-size:84px;font-weight:700;
+  color:rgba(201,168,76,0.08);line-height:1;
+  margin-bottom:-18px;
+}
+.modal-t{
+  font-family:'Cormorant Garamond',serif;
+  font-size:34px;font-weight:600;
+  color:var(--gold);margin-bottom:18px;
+}
+.modal-d{font-size:14px;line-height:1.9;color:rgba(240,235,224,0.6);}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media(max-width:1024px){
+  #nav{padding:24px 32px;}
+  #nav.sticky{padding:14px 32px;}
+  .n-links{gap:28px;}
+  .hero-wrap{padding:120px 32px 150px;}
+  #services{padding:90px 32px;}
+  .svc-grid{grid-template-columns:1fr 1fr;}
+  .svc-span2{grid-row:auto;}
+  #why{padding:0 32px;}
+  #portfolio{padding:90px 32px;}
+  #appointment{padding:90px 32px;}
+  footer{padding:72px 32px 40px;}
+  #stats{padding:0;}
+}
+@media(max-width:768px){
+  #nav{padding:20px 24px;}
+  #nav.sticky{padding:14px 24px;}
+  .n-links,.n-book{display:none;}
+  #hamburger{display:flex;}
+  .hero-wrap{padding:110px 24px 160px;}
+  #hero .hero-img-side{width:100%;opacity:0;}
+  #hero .hero-img-side.shown{opacity:0.15;}
+  .stats-inner{grid-template-columns:1fr 1fr;}
+  #services{padding:80px 24px;}
+  .svc-grid{grid-template-columns:1fr;}
+  #why{padding:0 24px;}
+  .why-wrap{grid-template-columns:1fr;}
+  .why-pin{position:relative;height:auto;padding:80px 0 32px;padding-right:0;}
+  .why-scroll{padding:0 0 80px;}
+  #portfolio{padding:80px 24px;}
+  .port-grid{grid-template-columns:1fr 1fr;}
+  #appointment{padding:80px 24px;}
+  .appt-cols{grid-template-columns:1fr;gap:50px;}
+  .l-form{grid-template-columns:1fr;}
+  .fg:nth-child(odd):not(.wide){border-right:none;padding-right:0;}
+  .fg:nth-child(even):not(.wide){padding-left:0;}
+  footer{padding:60px 24px 36px;}
+  .ft-cols{grid-template-columns:1fr 1fr;gap:40px;}
+  .ft-ghost{font-size:16vw;}
+  body{cursor:auto;}
+  #cur-dot,#cur-ring,#cur-txt{display:none;}
+  .btn-fill,.btn-border,.fsub,.n-book,.btt{cursor:pointer;}
+  .svc-card,.p-card,.c-row,.wa,.modal-x{cursor:pointer;}
+}
+@media(max-width:500px){
+  .port-grid{grid-template-columns:1fr;}
+  .ft-cols{grid-template-columns:1fr;}
+  .stats-inner{grid-template-columns:1fr 1fr;}
+  .h-ctas{flex-direction:column;}
+  .hero-wrap{padding:100px 20px 160px;}
+  #services{padding:70px 20px;}
+  #portfolio{padding:70px 20px;}
+  #appointment{padding:70px 20px;}
+  footer{padding:50px 20px 32px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ── CUSTOM CURSOR ── -->
+<div id="cur-dot"></div>
+<div id="cur-ring"></div>
+<div id="cur-txt">View Event →</div>
+
+<!-- ── LOADER ── -->
+<div id="loader">
+  <div id="loader-panel-l"></div>
+  <div id="loader-panel-r"></div>
+<div id="loader-center">
+      <img src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/00b84bb4-87ae-4db7-8d45-469f5f57389f/1000384364-1771867100488.png" alt="ACE" style="width:120px;height:120px;object-fit:contain;opacity:0;filter:drop-shadow(0 0 20px rgba(201,168,76,0.5));" id="loader-logo-img"/>
+      <div id="loader-logo">ACE</div>
+      <div id="loader-tagline">Event Management · Nashik, India</div>
+      <div id="loader-bar"><div id="loader-bar-fill"></div></div>
+    </div>
+</div>
+
+<!-- ── MOBILE MENU ── -->
+<div id="mobile-menu">
+  <a href="#services" onclick="closeMobileMenu()">Services</a>
+  <a href="#why" onclick="closeMobileMenu()">About</a>
+  <a href="#portfolio" onclick="closeMobileMenu()">Portfolio</a>
+  <a href="#appointment" onclick="closeMobileMenu()">Book Now</a>
+</div>
+
+<!-- ── NAVBAR ── -->
+<nav id="nav">
+    <a href="#hero" class="n-logo">
+      <img src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/00b84bb4-87ae-4db7-8d45-469f5f57389f/1000384364-1771867100488.png" alt="ACE Event Management" class="n-logo-img"/>ACE
+    </a>
+  <ul class="n-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#why">About</a></li>
+    <li><a href="#portfolio">Portfolio</a></li>
+    <li><a href="#appointment">Contact</a></li>
+  </ul>
+  <a href="#appointment" class="n-book"><span>Book Now</span></a>
+  <button id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-img-side" id="heroImgSide">
+    <img src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/00b84bb4-87ae-4db7-8d45-469f5f57389f/1000384364-1771867100488.png" alt="Ace Event Management"/>
+  </div>
+
+  <div class="hero-scroll-hint">
+    <div class="hero-scroll-line"></div>
+    Scroll
+  </div>
+  <div class="hero-wrap">
+    <div class="h-badge">
+      <span class="h-badge-bar"></span>
+      Nashik · India · Since 2013
+      <span class="h-badge-bar"></span>
+    </div>
+    <h1 class="h-title">
+      <span class="h-word">We</span>
+      <span class="h-word">Create</span><br>
+      <span class="h-word italic-gold">Unforgettable</span><br>
+      <span class="h-word">Events</span>
+    </h1>
+    <p class="h-sub">Your Partner in Curated Excellence</p>
+    <p class="h-desc">From intimate corporate gatherings to grand national showcases — Ace transforms every vision into a seamless, extraordinary experience crafted with precision and passion.</p>
+    <div class="h-ctas">
+      <a href="#portfolio" class="btn-fill">Explore Our Work</a>
+      <a href="#appointment" class="btn-border"><span class="bbs">Book a Consultation</span></a>
+    </div>
+  </div>
+  <div class="h-ticker">
+    <div class="ticker-wrap" id="tickerWrap">
+      <span class="t-item">Curated Excellence<span class="t-dot"></span></span>
+      <span class="t-item">Unforgettable Events<span class="t-dot"></span></span>
+      <span class="t-item">National Presence<span class="t-dot"></span></span>
+      <span class="t-item">500+ Events Executed<span class="t-dot"></span></span>
+      <span class="t-item">Corporate Excellence<span class="t-dot"></span></span>
+      <span class="t-item">Government Events<span class="t-dot"></span></span>
+      <span class="t-item">Brand Activation<span class="t-dot"></span></span>
+      <span class="t-item">Curated Excellence<span class="t-dot"></span></span>
+      <span class="t-item">Unforgettable Events<span class="t-dot"></span></span>
+      <span class="t-item">National Presence<span class="t-dot"></span></span>
+      <span class="t-item">500+ Events Executed<span class="t-dot"></span></span>
+      <span class="t-item">Corporate Excellence<span class="t-dot"></span></span>
+      <span class="t-item">Government Events<span class="t-dot"></span></span>
+      <span class="t-item">Brand Activation<span class="t-dot"></span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ── STATS ── -->
+<section id="stats">
+  <div class="stats-inner">
+    <div class="stat-box">
+        <div class="stat-n"><span class="ctr" data-t="2">0</span><span class="stat-sfx">+</span></div>
+        <div class="stat-l">Years Experience</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-n"><span class="ctr" data-t="50">0</span><span class="stat-sfx">+</span></div>
+        <div class="stat-l">Events Done</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-n"><span class="ctr" data-t="25">0</span><span class="stat-sfx">+</span></div>
+        <div class="stat-l">Corporate Events</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-n"><span class="ctr" data-t="95">0</span><span class="stat-sfx">%</span></div>
+        <div class="stat-l">Client Satisfaction</div>
+      </div>
+  </div>
+</section>
+
+<!-- ── SERVICES ── -->
+<section id="services">
+  <div class="svc-head">
+    <div>
+      <div class="stag">What We Offer</div>
+      <h2 class="stitle">Our <em>Services</em></h2>
+    </div>
+    <p class="sdesc svc-head-r">Comprehensive event solutions tailored to your vision — executed with meticulous attention to every detail from concept to completion.</p>
+  </div>
+  <div class="svc-grid">
+    <div class="svc-card svc-span2">
+      <div class="svc-glow"></div>
+      <div class="svc-ghost-num">01</div>
+      <div class="svc-ico">◈</div>
+      <h3>Event Planning & Management</h3>
+      <p>Leave every detail to us. From the first concept meeting to flawless execution — we orchestrate your entire event journey. Venue, logistics, timelines, guest management, on-site coordination, and beyond. Stress-free, seamless, and extraordinary every time.</p>
+      <div class="svc-line"></div>
+    </div>
+    <div class="svc-card">
+      <div class="svc-glow"></div>
+      <div class="svc-ghost-num">02</div>
+      <div class="svc-ico">⌖</div>
+      <h3>Venue Selection</h3>
+      <p>Our experts scout and secure the perfect location that aligns with your vision and comfortably accommodates your guests.</p>
+      <div class="svc-line"></div>
+    </div>
+    <div class="svc-card">
+      <div class="svc-glow"></div>
+      <div class="svc-ghost-num">03</div>
+      <div class="svc-ico">✦</div>
+      <h3>Catering & Hospitality</h3>
+      <p>Exquisite cuisine and impeccable service tailored to every palate — curated menus for any occasion.</p>
+      <div class="svc-line"></div>
+    </div>
+    <div class="svc-card">
+      <div class="svc-glow"></div>
+      <div class="svc-ghost-num">04</div>
+      <div class="svc-ico">❋</div>
+      <h3>Decor & Design</h3>
+      <p>Transforming any space into a captivating, visually stunning environment that resonates with your event's theme.</p>
+      <div class="svc-line"></div>
+    </div>
+    <div class="svc-card">
+      <div class="svc-glow"></div>
+      <div class="svc-ghost-num">05</div>
+      <div class="svc-ico">⬡</div>
+      <h3>Volunteers & On-Site</h3>
+      <p>Dedicated on-site teams ensuring seamless operations from setup to teardown, handled with precision.</p>
+      <div class="svc-line"></div>
+    </div>
+      <div class="svc-card">
+        <div class="svc-glow"></div>
+        <div class="svc-ghost-num">06</div>
+        <div class="svc-ico">◉</div>
+        <h3>Bouncer & Security</h3>
+        <p>Professional security personnel for safe, controlled, and comfortable event environments.</p>
+        <div class="svc-line"></div>
+      </div>
+        <div class="svc-card">
+          <div class="svc-glow"></div>
+          <div class="svc-ghost-num">07</div>
+          <div class="svc-ico">⌨</div>
+          <h3>Tech Support</h3>
+          <p>Custom event websites, online registration software, digital check-ins, ticketing systems, and live on-day tech support — full digital infrastructure for your event.</p>
+          <div class="svc-line"></div>
+        </div>
+    </div>
+</section>
+
+<!-- ── WHY CHOOSE US ── -->
+<section id="why">
+  <div class="why-wrap">
+    <div class="why-pin">
+      <div class="stag">Why Choose Us</div>
+      <h2 class="stitle" style="max-width:380px;">The Ace<br><em>Difference</em></h2>
+      <p style="margin-top:22px;font-size:14px;line-height:1.9;color:var(--gray);max-width:320px;">We go beyond logistics — we architect memories that endure long after the last guest has left.</p>
+        <div class="why-pin-stats">
+          <div>
+            <div class="wps-val">50<span>+</span></div>
+            <div class="wps-lbl">Events</div>
+          </div>
+          <div class="wps-div"></div>
+          <div>
+            <div class="wps-val">25<span>+</span></div>
+            <div class="wps-lbl">Corporate</div>
+          </div>
+          <div class="wps-div"></div>
+          <div>
+            <div class="wps-val">2<span>+</span></div>
+            <div class="wps-lbl">Years</div>
+          </div>
+        </div>
+    </div>
+    <div class="why-scroll">
+      <div class="why-row">
+        <div class="why-num">— 01</div>
+        <h3>Personalized Touch</h3>
+        <p>Every event is unique. We tailor our services to reflect the distinctive character of your brand, your story, and your vision — no two events are ever the same.</p>
+      </div>
+      <div class="why-row">
+        <div class="why-num">— 02</div>
+        <h3>Experienced Professionals</h3>
+        <p>A seasoned team with over a decade of experience in corporate, government, national, and private events executed across India with consistent excellence.</p>
+      </div>
+      <div class="why-row">
+        <div class="why-num">— 03</div>
+        <h3>Commitment to Detail</h3>
+        <p>Unwavering attention to every element — from lighting angles to guest flow — ensuring seamless, extraordinary experiences without any compromise.</p>
+      </div>
+      <div class="why-row">
+        <div class="why-num">— 04</div>
+        <h3>End-to-End Management</h3>
+        <p>From the first concept call to the final cleanup, we own every step of your event lifecycle so you can be fully present in every moment.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PARTNERS ── -->
+<div id="partners">
+  <p class="mq-title">Our Proud Collaborations</p>
+  <div class="mq-row">
+    <div class="mq-track">
+      <span class="mq-item">Naredco</span><span class="mq-sep">◆</span>
+      <span class="mq-item">MACCIA</span><span class="mq-sep">◆</span>
+      <span class="mq-item">NIMA</span><span class="mq-sep">◆</span>
+      <span class="mq-item">BNI</span><span class="mq-sep">◆</span>
+      <span class="mq-item">Credia</span><span class="mq-sep">◆</span>
+      <span class="mq-item">Creadia</span><span class="mq-sep">◆</span>
+      <span class="mq-item">Naredco</span><span class="mq-sep">◆</span>
+      <span class="mq-item">MACCIA</span><span class="mq-sep">◆</span>
+      <span class="mq-item">NIMA</span><span class="mq-sep">◆</span>
+      <span class="mq-item">BNI</span><span class="mq-sep">◆</span>
+      <span class="mq-item">Credia</span><span class="mq-sep">◆</span>
+      <span class="mq-item">Creadia</span><span class="mq-sep">◆</span>
+    </div>
+  </div>
+  <div class="mq-row">
+    <div class="mq-track">
+      <span class="mq-item">Homethon</span><span class="mq-sep">◆</span>
+      <span class="mq-item">Youth Festival</span><span class="mq-sep">◆</span>
+      <span class="mq-item">MITEXPO</span><span class="mq-sep">◆</span>
+      <span class="mq-item">UdyogShikhar</span><span class="mq-sep">◆</span>
+      <span class="mq-item">Shree Mangal</span><span class="mq-sep">◆</span>
+      <span class="mq-item">Shilpa Estates</span><span class="mq-sep">◆</span>
+      <span class="mq-item">Homethon</span><span class="mq-sep">◆</span>
+      <span class="mq-item">Youth Festival</span><span class="mq-sep">◆</span>
+      <span class="mq-item">MITEXPO</span><span class="mq-sep">◆</span>
+      <span class="mq-item">UdyogShikhar</span><span class="mq-sep">◆</span>
+      <span class="mq-item">Shree Mangal</span><span class="mq-sep">◆</span>
+      <span class="mq-item">Shilpa Estates</span><span class="mq-sep">◆</span>
+    </div>
+  </div>
+</div>
+
+<!-- ── PORTFOLIO ── -->
+<section id="portfolio">
+  <div class="port-head">
+    <div class="port-title-rel">
+        <div class="stag">Our Work</div>
+      <h2 class="stitle">Previous <em>Events</em></h2>
+    </div>
+    <p class="sdesc" style="max-width:300px;">Click any card to learn more about the event.</p>
+  </div>
+  <div class="port-grid" id="portGrid">
+
+    <div class="p-card" data-n="01" data-title="NIMA Power 2023" data-cat="Exhibition · 2023" data-desc="An electrifying showcase of business innovation, cutting-edge products, and entrepreneurial excellence from across the region. Ace managed the full event logistics, stage setup, and on-site coordination.">
+      <div class="p-bg" style="background:linear-gradient(135deg,#0e0d09,#1a1810);"></div>
+      <div class="p-scan"></div><div class="p-hatch"></div>
+      <div class="p-cover">
+        <span class="p-cat">Exhibition · 2023</span>
+        <div class="p-bar"></div>
+        <h3 class="p-name">NIMA Power 2023</h3>
+        <p class="p-text">Electrifying showcase of business innovation and entrepreneurial excellence.</p>
+      </div>
+      <span class="p-idx">01</span>
+    </div>
+
+    <div class="p-card" data-n="02" data-title="MITEXPO 2023" data-cat="Expo · 2023" data-desc="A landmark industry exhibition managed with creativity and precision — reflecting our wealth of industry knowledge and our ability to execute large-scale expos flawlessly.">
+      <div class="p-bg" style="background:linear-gradient(135deg,#0d1009,#161a0e);"></div>
+      <div class="p-scan"></div><div class="p-hatch"></div>
+      <div class="p-cover">
+        <span class="p-cat">Expo · 2023</span>
+        <div class="p-bar"></div>
+        <h3 class="p-name">MITEXPO 2023</h3>
+        <p class="p-text">Landmark industry exhibition executed with creativity and precision.</p>
+      </div>
+      <span class="p-idx">02</span>
+    </div>
+
+    <div class="p-card" data-n="03" data-title="UdyogShikhar" data-cat="Summit · Corporate" data-desc="Business Beyond 100 Years — a visionary summit exploring the future of commerce, networking, and achieving uncommon results. A flagship corporate summit managed end-to-end by Ace.">
+      <div class="p-bg" style="background:linear-gradient(135deg,#090d10,#0d1519);"></div>
+      <div class="p-scan"></div><div class="p-hatch"></div>
+      <div class="p-cover">
+        <span class="p-cat">Summit · Corporate</span>
+        <div class="p-bar"></div>
+        <h3 class="p-name">UdyogShikhar</h3>
+        <p class="p-text">Business Beyond 100 Years — the future of commerce and networking.</p>
+      </div>
+      <span class="p-idx">03</span>
+    </div>
+
+    <div class="p-card" data-n="04" data-title="Naredko & Homethon" data-cat="Real Estate · Expo" data-desc="The premier real estate showcase for visionaries, professionals, and enthusiasts in land development and housing finance. Ace managed venue, registration, security, and full on-site operations.">
+      <div class="p-bg" style="background:linear-gradient(135deg,#100a0a,#1a1212);"></div>
+      <div class="p-scan"></div><div class="p-hatch"></div>
+      <div class="p-cover">
+        <span class="p-cat">Real Estate · Expo</span>
+        <div class="p-bar"></div>
+        <h3 class="p-name">Naredko & Homethon</h3>
+        <p class="p-text">Premier showcase for real estate visionaries and industry professionals.</p>
+      </div>
+      <span class="p-idx">04</span>
+    </div>
+
+    <div class="p-card" data-n="05" data-title="27th National Youth Festival" data-cat="Government · National" data-desc="A grand national gathering bringing together the energy and enthusiasm of young minds from across India. This government event was managed end-to-end by Ace — one of our proudest achievements.">
+      <div class="p-bg" style="background:linear-gradient(135deg,#0c0910,#130f1a);"></div>
+      <div class="p-scan"></div><div class="p-hatch"></div>
+      <div class="p-cover">
+        <span class="p-cat">Government · National</span>
+        <div class="p-bar"></div>
+        <h3 class="p-name">27th National Youth Festival</h3>
+        <p class="p-text">Grand national gathering of young minds from across India — end-to-end management.</p>
+      </div>
+      <span class="p-idx">05</span>
+    </div>
+
+    <div class="p-card" data-n="06" data-title="Credia Shelter Expo 2024" data-cat="Property Expo · 2024" data-desc="One of the most prestigious real estate events of the year, uniting developers, investors, real estate professionals, and prospective buyers under one roof. A massive logistical achievement for Ace.">
+      <div class="p-bg" style="background:linear-gradient(135deg,#100b08,#1a1409);"></div>
+      <div class="p-scan"></div><div class="p-hatch"></div>
+      <div class="p-cover">
+        <span class="p-cat">Property Expo · 2024</span>
+        <div class="p-bar"></div>
+        <h3 class="p-name">Credia Shelter Expo 2024</h3>
+        <p class="p-text">Most prestigious real estate event — uniting the entire property ecosystem.</p>
+      </div>
+      <span class="p-idx">06</span>
+    </div>
+
+    <div class="p-card" data-n="07" data-title="BNI EXPO 2024" data-cat="Business · Networking" data-desc="Provided seamless registration and on-site management for this major business networking exhibition — ensuring smooth and efficient registrations and guest flows throughout the event.">
+      <div class="p-bg" style="background:linear-gradient(135deg,#080f10,#0f1a18);"></div>
+      <div class="p-scan"></div><div class="p-hatch"></div>
+      <div class="p-cover">
+        <span class="p-cat">Business · Networking</span>
+        <div class="p-bar"></div>
+        <h3 class="p-name">BNI EXPO 2024</h3>
+        <p class="p-text">Seamless registration and management for major networking exhibition.</p>
+      </div>
+      <span class="p-idx">07</span>
+    </div>
+
+    <div class="p-card" data-n="08" data-title="NIMA Innovation Expo 2024" data-cat="Innovation · Expo 2024" data-desc="Highlighting groundbreaking solutions, this expo brought together startups and business enthusiasts to explore the latest advancements in business and technology across industries.">
+      <div class="p-bg" style="background:linear-gradient(135deg,#100f08,#1a1a0f);"></div>
+      <div class="p-scan"></div><div class="p-hatch"></div>
+      <div class="p-cover">
+        <span class="p-cat">Innovation · Expo 2024</span>
+        <div class="p-bar"></div>
+        <h3 class="p-name">NIMA Innovation Expo 2024</h3>
+        <p class="p-text">Groundbreaking solutions expo connecting startups and business leaders.</p>
+      </div>
+      <span class="p-idx">08</span>
+    </div>
+
+    <div class="p-card" data-n="09" data-title="Shree Mangal Groups" data-cat="Launch · Private" data-desc="We managed the prestigious launch event for a premier residential project — handling venue setup, VIP guest management, decor, catering coordination, and full event execution.">
+      <div class="p-bg" style="background:linear-gradient(135deg,#100808,#1a1010);"></div>
+      <div class="p-scan"></div><div class="p-hatch"></div>
+      <div class="p-cover">
+        <span class="p-cat">Launch · Private</span>
+        <div class="p-bar"></div>
+        <h3 class="p-name">Shree Mangal Groups</h3>
+        <p class="p-text">Prestigious residential project launch with VIP guest management.</p>
+      </div>
+      <span class="p-idx">09</span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── APPOINTMENT ── -->
+<section id="appointment">
+  <div class="appt-rule" id="apptRule"></div>
+  <div class="stag">Get In Touch</div>
+  <div class="appt-cols">
+    <div>
+      <div class="appt-big">Let's Create<br>Something<b>Extraordinary</b></div>
+      <div class="c-row">
+        <div class="c-ico">📍</div>
+        <div>
+          <div class="c-lbl">Our Office</div>
+          <div class="c-val">5th Floor, Shop no.522 Roongta Business Point, Kamatwade Nashik</div>
+        </div>
+      </div>
+      <div class="c-row">
+        <div class="c-ico">📞</div>
+        <div>
+          <div class="c-lbl">Call Us</div>
+          <div class="c-val">+91 93704 83733</div>
+        </div>
+      </div>
+      <div class="c-row">
+        <div class="c-ico">💬</div>
+        <div>
+          <div class="c-lbl">WhatsApp</div>
+          <div class="c-val">+91 80878 21091</div>
+        </div>
+      </div>
+      <div class="c-row">
+        <div class="c-ico">✉</div>
+        <div>
+          <div class="c-lbl">Email</div>
+          <div class="c-val">skservices@gmail.com</div>
+        </div>
+      </div>
+    </div>
+    <form class="l-form" id="contactForm" onsubmit="submitForm(event)">
+      <div class="fg">
+        <label class="fl">Full Name</label>
+        <input type="text" placeholder="Your full name" required/>
+        <div class="fu"></div>
+      </div>
+      <div class="fg">
+        <label class="fl">Phone Number</label>
+        <input type="tel" placeholder="+91 00000 00000" required/>
+        <div class="fu"></div>
+      </div>
+      <div class="fg">
+        <label class="fl">Email Address</label>
+        <input type="email" placeholder="you@email.com"/>
+        <div class="fu"></div>
+      </div>
+      <div class="fg">
+        <label class="fl">Event Type</label>
+        <select required>
+          <option value="" disabled selected>Select type</option>
+          <option>Corporate Event</option>
+          <option>Exhibition / Expo</option>
+          <option>Government Event</option>
+          <option>Wedding / Social</option>
+          <option>Brand Activation</option>
+          <option>Private Party</option>
+        </select>
+        <div class="fu"></div>
+      </div>
+      <div class="fg">
+        <label class="fl">Event Date</label>
+        <input type="date"/>
+        <div class="fu"></div>
+      </div>
+      <div class="fg">
+        <label class="fl">Expected Guests</label>
+        <select>
+          <option value="" disabled selected>Approximate count</option>
+          <option>Under 100</option>
+          <option>100 – 500</option>
+          <option>500 – 1,000</option>
+          <option>1,000 – 5,000</option>
+          <option>5,000+</option>
+        </select>
+        <div class="fu"></div>
+      </div>
+      <div class="fg wide">
+        <label class="fl">Your Vision</label>
+        <textarea placeholder="Tell us about your event — theme, requirements, special requests..."></textarea>
+        <div class="fu"></div>
+      </div>
+      <button type="submit" class="fsub" id="fBtn">Request a Consultation →</button>
+    </form>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="ft-progress" id="ftProg"></div>
+  <div class="ft-ghost">ACE EVENTS</div>
+  <div class="ft-cols">
+      <div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:5px;">
+          <img src="https://slelguoygbfzlpylpxfs.supabase.co/storage/v1/object/public/project-uploads/00b84bb4-87ae-4db7-8d45-469f5f57389f/1000384364-1771867100488.png" alt="ACE Event Management" style="width:54px;height:54px;object-fit:contain;filter:drop-shadow(0 0 8px rgba(201,168,76,0.4));"/>
+          <span class="ft-logo-big" style="margin-bottom:0;">ACE</span>
+        </div>
+        <span class="ft-logo-sm">Event Management · Nashik, India</span>
+        <p class="ft-about">A leading corporate event management company operating nationally from Nashik and other cities in India. Transforming visions into extraordinary experiences with precision and passion.</p>
+      </div>
+    <div>
+      <div class="ft-h">Quick Links</div>
+      <ul class="ft-list">
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#services">Services</a></li>
+        <li><a href="#portfolio">Portfolio</a></li>
+        <li><a href="#appointment">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="ft-h">Services</div>
+      <ul class="ft-list">
+          <li><a href="#services">Events</a></li>
+          <li><a href="#services">Exhibitions</a></li>
+          <li><a href="#services">Brand Activation</a></li>
+          <li><a href="#services">Government Events</a></li>
+          <li><a href="#services">Tech Support</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="ft-h">Contact</div>
+      <div class="ft-cr"><span>📍</span><span>5th Floor, Shop no.522 Roongta Business Point, Kamatwade Nashik</span></div>
+      <div class="ft-cr"><span>📞</span><span>93704 83733</span></div>
+      <div class="ft-cr"><span>💬</span><span>80878 21091</span></div>
+      <div class="ft-cr"><span>✉</span><span>skservices@gmail.com</span></div>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <p class="ft-copy">© 2025 Ace Events Management. All Rights Reserved.</p>
+    <div class="ft-policy">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+    </div>
+    <button class="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})">Back to Top</button>
+  </div>
+</footer>
+
+<!-- ── WHATSAPP ── -->
+<a href="https://wa.me/918087821091" class="wa" target="_blank" rel="noopener" title="WhatsApp Us">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="#080808"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<!-- ── MODAL ── -->
+<div id="modal">
+  <div class="modal-box">
+    <button class="modal-x" onclick="closeModal()">✕</button>
+    <div class="modal-bg-n" id="mNum">01</div>
+    <div class="modal-t" id="mTitle">Event Title</div>
+    <p style="font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;margin-bottom:16px;" id="mCat">Category</p>
+    <p class="modal-d" id="mDesc">Description</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════ -->
+<script>
+/* ── HERO IMAGE SIDE ── */
+/* (no Three.js needed) */
+
+/* ── CUSTOM CURSOR ── */
+var dot=document.getElementById('cur-dot');
+var ring=document.getElementById('cur-ring');
+var txt=document.getElementById('cur-txt');
+var cx=0,cy=0,rx=0,ry=0;
+document.addEventListener('mousemove',function(e){
+  cx=e.clientX;cy=e.clientY;
+  dot.style.left=cx+'px';dot.style.top=cy+'px';
+  txt.style.left=cx+'px';txt.style.top=cy+'px';
+});
+(function raf(){
+  rx+=(cx-rx)*0.1;ry+=(cy-ry)*0.1;
+  ring.style.left=rx+'px';ring.style.top=ry+'px';
+  requestAnimationFrame(raf);
+})();
+var linkEls=document.querySelectorAll('a,button,.svc-card,.p-card,.mq-item,.btt,.wa');
+linkEls.forEach(function(el){
+  el.addEventListener('mouseenter',function(){document.body.classList.add('link-hover');});
+  el.addEventListener('mouseleave',function(){document.body.classList.remove('link-hover');});
+});
+var cardEls=document.querySelectorAll('.p-card');
+cardEls.forEach(function(el){
+  el.addEventListener('mouseenter',function(){document.body.classList.add('card-hover');});
+  el.addEventListener('mouseleave',function(){document.body.classList.remove('card-hover');});
+});
+
+/* ── LOADER ── */
+  window.addEventListener('load',function(){
+    var logo=document.getElementById('loader-logo');
+    var logoImg=document.getElementById('loader-logo-img');
+    var tag=document.getElementById('loader-tagline');
+    var bar=document.getElementById('loader-bar');
+    var fill=document.getElementById('loader-bar-fill');
+    var pl=document.getElementById('loader-panel-l');
+    var pr=document.getElementById('loader-panel-r');
+    var heroImg=document.getElementById('heroImgSide');
+
+      /* Fade in loader text */
+      setTimeout(function(){
+        logoImg.style.transition='opacity .8s';logoImg.style.opacity='1';
+        logo.style.transition='opacity .7s .3s';logo.style.opacity='1';
+        tag.style.transition='opacity .7s .25s';tag.style.opacity='1';
+        bar.style.transition='opacity .5s .4s';bar.style.opacity='1';
+        fill.style.transition='width 1.3s .5s ease';fill.style.width='100%';
+      },200);
+
+      /* Fade out text */
+      setTimeout(function(){
+        logoImg.style.opacity='0';logo.style.opacity='0';tag.style.opacity='0';bar.style.opacity='0';
+      },2000);
+
+    /* Curtains open */
+    setTimeout(function(){
+      pl.style.transition='transform 1.1s cubic-bezier(.77,0,.175,1)';
+      pr.style.transition='transform 1.1s cubic-bezier(.77,0,.175,1)';
+      pl.style.transform='translateX(-100%)';
+      pr.style.transform='translateX(100%)';
+    },2400);
+
+    /* Remove loader, start animations */
+    setTimeout(function(){
+      document.getElementById('loader').style.display='none';
+      heroImg.classList.add('shown');
+      startAnimations();
+    },3500);
+});
+
+/* ── GSAP SCROLL ANIMATIONS ── */
+function startAnimations(){
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* Hero entrance */
+  gsap.to('.h-badge',{opacity:1,y:0,duration:1,delay:.1,ease:'power3.out'});
+  gsap.to('.h-word',{opacity:1,y:0,duration:1,stagger:.1,delay:.3,ease:'power3.out'});
+  gsap.to('.h-sub',{opacity:1,duration:1,delay:.8,ease:'power3.out'});
+  gsap.to('.h-desc',{opacity:1,duration:1,delay:1,ease:'power3.out'});
+  gsap.to('.h-ctas',{opacity:1,duration:1,delay:1.2,ease:'power3.out'});
+
+  /* Stats counters */
+  document.querySelectorAll('.ctr').forEach(function(el){
+    var target=+el.dataset.t;
+    ScrollTrigger.create({
+      trigger:el,start:'top 82%',once:true,
+      onEnter:function(){
+        gsap.to({v:0},{v:target,duration:2,ease:'power2.out',
+          onUpdate:function(){el.textContent=Math.round(this.targets()[0].v);}
+        });
+      }
+    });
+  });
+
+  /* Services */
+  gsap.from('.svc-card',{
+    opacity:0,y:50,duration:.8,stagger:.08,ease:'power3.out',
+    scrollTrigger:{trigger:'#services',start:'top 72%'}
+  });
+
+  /* Why rows */
+  gsap.from('.why-row',{
+    opacity:0,x:36,duration:.8,stagger:.12,ease:'power3.out',
+    scrollTrigger:{trigger:'#why',start:'top 65%'}
+  });
+
+  /* Portfolio */
+  gsap.from('.p-card',{
+    opacity:0,scale:.94,duration:.7,stagger:.07,ease:'power3.out',
+    scrollTrigger:{trigger:'#portfolio',start:'top 72%'}
+  });
+
+  /* Appt rule draw */
+  ScrollTrigger.create({
+    trigger:'#appointment',start:'top 72%',once:true,
+    onEnter:function(){
+      gsap.to('#apptRule',{scaleX:1,duration:1.4,ease:'power3.inOut'});
+    }
+  });
+
+  /* Appt form items */
+  gsap.from('.fg',{
+    opacity:0,y:20,duration:.6,stagger:.06,ease:'power3.out',
+    scrollTrigger:{trigger:'#appointment',start:'top 65%'}
+  });
+
+  /* Footer progress bar */
+  window.addEventListener('scroll',function(){
+    var d=document.documentElement;
+    var pct=(window.scrollY/(d.scrollHeight-window.innerHeight))*100;
+    document.getElementById('ftProg').style.width=pct+'%';
+  });
+}
+
+/* ── NAVBAR SCROLL ── */
+window.addEventListener('scroll',function(){
+  var n=document.getElementById('nav');
+  n.classList.toggle('sticky',window.scrollY>55);
+});
+
+/* ── MOBILE MENU ── */
+var menuOpen=false;
+function toggleMenu(){
+  menuOpen=!menuOpen;
+  var n=document.getElementById('nav');
+  var m=document.getElementById('mobile-menu');
+  n.classList.toggle('menu-open',menuOpen);
+  m.classList.toggle('open',menuOpen);
+}
+function closeMobileMenu(){
+  menuOpen=false;
+  document.getElementById('nav').classList.remove('menu-open');
+  document.getElementById('mobile-menu').classList.remove('open');
+}
+
+/* ── PORTFOLIO MODAL ── */
+document.querySelectorAll('.p-card').forEach(function(c){
+  c.addEventListener('click',function(){
+    document.getElementById('mNum').textContent=c.dataset.n;
+    document.getElementById('mTitle').textContent=c.dataset.title;
+    document.getElementById('mCat').textContent=c.dataset.cat;
+    document.getElementById('mDesc').textContent=c.dataset.desc;
+    document.getElementById('modal').classList.add('on');
+  });
+});
+function closeModal(){document.getElementById('modal').classList.remove('on');}
+document.getElementById('modal').addEventListener('click',function(e){
+  if(e.target===this) closeModal();
+});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
+
+/* ── FORM SUBMIT ── */
+function submitForm(e){
+  e.preventDefault();
+  var btn=document.getElementById('fBtn');
+  var orig=btn.textContent;
+  btn.textContent='✓  Request Received — We\'ll Be in Touch Within 24hrs!';
+  btn.style.background='#1a3a1a';btn.style.color='#5dff7d';
+  setTimeout(function(){
+    btn.textContent=orig;btn.style.background='';btn.style.color='';
+    document.getElementById('contactForm').reset();
+  },5000);
+}
+</script>
+</body>
+</html>
